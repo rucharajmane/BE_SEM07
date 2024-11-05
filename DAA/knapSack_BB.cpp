@@ -97,7 +97,7 @@ int main()
     int W = 50;
 
     vector<Item> items;
-    Item item1(40, 100);
+    Item item1(40, 200);
     Item item2(10, 50);
     Item item3(12, 120);
     items.push_back(item1);
