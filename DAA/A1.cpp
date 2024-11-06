@@ -1,4 +1,4 @@
-#include<iostream>
+#include <iostream>
 using namespace std;
 
 int fibonacci(int n)
@@ -43,7 +43,7 @@ int fibonacciDP(int n)
     for (int i = 2; i <= n; i++)
         F[i] = F[i - 1] + F[i - 2];
 
-    return F[n];
+    return F[n - 1];
 }
 
 int main()
