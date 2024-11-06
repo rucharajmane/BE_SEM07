@@ -5,7 +5,7 @@ contract Account {
     address public account;
     uint128 public balance;
 
-    constructor() {
+    constructor() {}
         account = msg.sender;
     }
 
