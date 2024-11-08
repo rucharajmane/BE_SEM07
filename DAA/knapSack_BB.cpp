@@ -95,7 +95,6 @@ int knapsack(int W, vector<Item> &items)
 int main()
 {
     int W = 50;
-
     vector<Item> items;
     Item item1(40, 200);
     Item item2(10, 50);
