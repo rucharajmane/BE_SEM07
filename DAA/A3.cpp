@@ -2,7 +2,7 @@
 #include <vector>
 using namespace std;
 
-int knapsack(int index, int current_weight, const vector<int> &weights, const vector<int> &values, const int &n, const int &max_capacity, vector<vector<int> > &dp)
+int knapsack(int index, int current_weight, const vector<int> &weights, const vector<int> &values, const int &n, const int &max_capacity, vector<vector<int>> &dp)
 {
     if (index >= n)
         return 0;
@@ -48,7 +48,7 @@ int main()
     int n = 10;
     int capacity = 269;
 
-    vector<vector<int> > dp(n, vector<int>(capacity, -1));
+    vector<vector<int>> dp(n, vector<int>(capacity, -1));
 
     cout << "Max Profit " << knapsack(0, 0, weights, values, n, capacity, dp) << endl;
     return 0;
