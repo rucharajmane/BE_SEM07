@@ -1,127 +1,132 @@
-#include <iostream>
-#include <vector>
+#include <bits/stdc++.h>
 
 using namespace std;
+class Solution {
+  public:
+    bool isSafe1(int row, int col, vector < string > board, int n) {
+      // check upper element
+      int duprow = row;
+      int dupcol = col;
 
-int N = 4;
-vector<vector<int>> board(N, vector<int>(N, 0));
-pair<int, int> placed = {2, 3}; 
+      while (row >= 0 && col >= 0) {
+        if (board[row][col] == 'Q')
+          return false;
+        row--;
+        col--;
+      }
 
-void printBoard(const vector<vector<int>> &board)
-{
-    for (int i = 0; i < board.size(); i++)
-    {
-        for (int j = 0; j < board[i].size(); j++)
-        {
-            if (board[i][j] == 0)
-                cout << ". ";
-            else if (board[i][j] == 1)
-                cout << "Q ";
-            else
-                cout << "P "; 
+      col = dupcol;
+      row = duprow;
+      while (col >= 0) {
+        if (board[row][col] == 'Q')
+          return false;
+        col--;
+      }
+
+      row = duprow;
+      col = dupcol;
+      while (row < n && col >= 0) {
+        if (board[row][col] == 'Q')
+          return false;
+        row++;
+        col--;
+      }
+      return true;
+    }
+
+  public:
+    void solve(int col, vector < string > & board, vector < vector < string > > & ans, int n) {
+      if (col == n) {
+        ans.push_back(board);
+        return;
+      }
+      for (int row = 0; row < n; row++) {
+        if (isSafe1(row, col, board, n)) {
+          board[row][col] = 'Q';
+          solve(col + 1, board, ans, n);
+          board[row][col] = '.';
         }
-        cout << endl;
+      }
     }
+
+  public:
+    vector < vector < string > > solveNQueens(int n) {
+      vector < vector < string > > ans;
+      vector < string > board(n);
+      string s(n, '.');
+      for (int i = 0; i < n; i++) {
+        board[i] = s;
+      }
+      solve(0, board, ans, n);
+      return ans;
+    }
+};
+int main() {
+  int n = 4; // we are taking 4*4 grid and 4 queens
+  Solution obj;
+  vector < vector < string > > ans = obj.solveNQueens(n);
+  for (int i = 0; i < ans.size(); i++) {
+    cout << "Arrangement " << i + 1 << "\n";
+    for (int j = 0; j < ans[0].size(); j++) {
+      cout << ans[i][j];
+      cout << endl;
+    }
+    cout << endl;
+  }
+  return 0;
 }
 
-bool is_safe(const vector<vector<int>> &board, int pos_x, int pos_y)
-{
-    for (int i = 0; i < N; i++)
-    {
-        if (board[i][pos_y] == 1)
-            return false;
-    }
+/*
+#include <bits/stdc++.h>
 
-    for (int i = 0; i < N; i++)
-    {
-        if (board[pos_x][i] == 1)
-            return false;
-    }
-
-    int i = pos_x, j = pos_y;
-    while (i >= 0 && j >= 0)
-    {
-        if (board[i][j] == 1)
-            return false;
-        i--;
-        j--;
-    }
-
-    i = pos_x, j = pos_y;
-    while (i < N && j >= 0)
-    {
-        if (board[i][j] == 1)
-            return false;
-        i++;
-        j--;
-    }
-
-    i = pos_x, j = pos_y;
-    while (i >= 0 && j < N)
-    {
-        if (board[i][j] == 1)
-            return false;
-        i--;
-        j++;
-    }
-
-    i = pos_x, j = pos_y;
-    while (i < N && j < N)
-    {
-        if (board[i][j] == 1)
-            return false;
-        i++;
-        j++;
-    }
-
-    return true;
-}
-
-bool NQueens(vector<vector<int>> &board, int col)
-{
-    if (col >= N)
-        return true;
-
-    if (col == placed.second)
-        return NQueens(board, col + 1);
-
-    for (int i = 0; i < N; i++)
-    {
-        if (i == placed.first)
-            continue;
-
-        if (is_safe(board, i, col))
-        {
-            board[i][col] = 1;
-
-            if (NQueens(board, col + 1))
-                return true;
-
-            board[i][col] = 0; 
+using namespace std;
+class Solution {
+  public:
+    void solve(int col, vector < string > & board, vector < vector < string >> & ans, vector < int > & leftrow, vector < int > & upperDiagonal, vector < int > & lowerDiagonal, int n) {
+      if (col == n) {
+        ans.push_back(board);
+        return;
+      }
+      for (int row = 0; row < n; row++) {
+        if (leftrow[row] == 0 && lowerDiagonal[row + col] == 0 && upperDiagonal[n - 1 + col - row] == 0) {
+          board[row][col] = 'Q';
+          leftrow[row] = 1;
+          lowerDiagonal[row + col] = 1;
+          upperDiagonal[n - 1 + col - row] = 1;
+          solve(col + 1, board, ans, leftrow, upperDiagonal, lowerDiagonal, n);
+          board[row][col] = '.';
+          leftrow[row] = 0;
+          lowerDiagonal[row + col] = 0;
+          upperDiagonal[n - 1 + col - row] = 0;
         }
+      }
     }
 
-    return false;
+  public:
+    vector < vector < string >> solveNQueens(int n) {
+      vector < vector < string >> ans;
+      vector < string > board(n);
+      string s(n, '.');
+      for (int i = 0; i < n; i++) {
+        board[i] = s;
+      }
+      vector < int > leftrow(n, 0), upperDiagonal(2 * n - 1, 0), lowerDiagonal(2 * n - 1, 0);
+      solve(0, board, ans, leftrow, upperDiagonal, lowerDiagonal, n);
+      return ans;
+    }
+};
+int main() {
+  int n = 4; // we are taking 4*4 grid and 4 queens
+  Solution obj;
+  vector < vector < string >> ans = obj.solveNQueens(n);
+  for (int i = 0; i < ans.size(); i++) {
+    cout << "Arrangement " << i + 1 << "\n";
+    for (int j = 0; j < ans[0].size(); j++) {
+      cout << ans[i][j];
+      cout << endl;
+    }
+    cout << endl;
+  }
+  return 0;
 }
-
-int main()
-{
-    board[placed.first][placed.second] = 1;
-
-    // cout << "Initial Board" << endl;
-    // printBoard(board);
-    // cout << "********" << endl;
-
-    if (NQueens(board, 0))
-    {
-        cout << "Solution" << endl;
-        printBoard(board);
-        cout << "********" << endl;
-    }
-    else
-    {
-        cout << "No Solution" << endl;
-    }
-
-    return 0;
-}
+*/
